@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Freelance Tax Calculator 2025 | USA, UK, Canada, Australia & Germany",
   description: "Free self-employment tax calculator for freelancers worldwide. Estimate taxes for 1099, Sole Trader, T2125, ABN, and Kleinunternehmer income.",
   alternates: {
-    canonical: 'https://hustlefinance.com',
+    canonical: 'https://freelance-tax.vercel.app',
   },
 };
 
@@ -174,10 +174,10 @@ export default function Home() {
             <a href="/faq" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               FAQ
             </a>
-            <a href="#" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <a href="/privacy" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <a href="/terms" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Terms of Service
             </a>
           </div>

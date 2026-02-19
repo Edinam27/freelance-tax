@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Freelance Tax FAQ | USA, UK, Canada, Australia & Germany",
   description: "Frequently asked questions about freelance taxes, self-employment tax rates, and deductibles in the US, UK, Canada, Australia, and Germany.",
   alternates: {
-    canonical: 'https://hustlefinance.com/faq',
+    canonical: 'https://freelance-tax.vercel.app/faq',
   },
 };
 

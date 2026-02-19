@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { professions } from '@/lib/professions';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://hustlefinance.com';
+  const baseUrl = 'https://freelance-tax.vercel.app';
   
   // Base routes
   const routes = [
@@ -17,6 +17,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
     },
   ];
 

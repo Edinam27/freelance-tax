@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://hustlefinance.com/sitemap.xml',
+    sitemap: 'https://freelance-tax.vercel.app/sitemap.xml',
   };
 }
