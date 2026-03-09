@@ -1,4 +1,5 @@
 import TaxCalculator from '@/components/TaxCalculator';
+import GlobeFeatureSection from '@/components/ui/globe-feature-section';
 import { ArrowRight, CheckCircle, ShieldCheck, Zap, Globe, TrendingUp } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -32,34 +33,11 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* Hero Section */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="text-center max-w-3xl mx-auto">
-            <span className="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-800 text-sm font-semibold mb-4">
-              Now Supporting USA, UK, Canada, Australia & Germany
-            </span>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-6">
-              Freelance Taxes, <span className="text-blue-600">Simplified Globally.</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-10 leading-relaxed">
-              Stop guessing your tax bill. Use our free 2025/2026 Self-Employment Tax Calculator to estimate your quarterly payments and maximize your take-home pay, wherever you work.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg transition-all shadow-lg hover:shadow-xl">
-                Start Calculating
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </button>
-              <button className="inline-flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 md:py-4 md:text-lg transition-all">
-                Download Guide
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      
+      <GlobeFeatureSection />
 
       {/* Calculator Section */}
-      <section className="py-12 md:py-16 px-4 bg-gray-50/50">
+      <section id="calculator" className="py-12 md:py-16 px-4 bg-gray-50/50">
         <TaxCalculator />
       </section>
 

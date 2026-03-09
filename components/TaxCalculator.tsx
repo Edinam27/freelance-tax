@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X, Share2, RotateCcw } from 'lucide-react';
+import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X, Share2, RotateCcw, Lock } from 'lucide-react';
+import { generateTaxReport } from '@/lib/pdfGenerator';
+import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 
 const COLORS = ['#10B981', '#EF4444', '#3B82F6', '#F59E0B'];
@@ -72,6 +74,18 @@ export default function TaxCalculator({
   const [tips, setTips] = useState<TaxTip[]>([]);
   const [showProModal, setShowProModal] = useState(false);
   const [showShareToast, setShowShareToast] = useState(false);
+  const [isPro, setIsPro] = useState(false);
+  const [loadingPayment, setLoadingPayment] = useState(false);
+  const [email, setEmail] = useState('');
+  const router = useRouter();
+
+  // Check if user is already Pro (mock check or from localStorage/session)
+  useEffect(() => {
+    const proStatus = localStorage.getItem('hustle_finance_pro');
+    if (proStatus === 'true') {
+      setIsPro(true);
+    }
+  }, []);
 
   useEffect(() => {
     calculateTaxes();
@@ -92,6 +106,55 @@ export default function TaxCalculator({
     navigator.clipboard.writeText(window.location.href);
     setShowShareToast(true);
     setTimeout(() => setShowShareToast(false), 2000);
+  };
+
+  const handleDownloadPDF = () => {
+    if (!isPro) {
+      setShowProModal(true);
+      return;
+    }
+    
+    generateTaxReport(
+      currentCountry.name,
+      currentCountry.currency,
+      results,
+      { software: softwareExpenses, equipment: equipmentExpenses, homeOffice: homeOfficeExpenses, other: otherExpenses },
+      filingStatus,
+      localTaxRate
+    );
+  };
+
+  const handlePayment = async () => {
+    if (!email) {
+      alert('Please enter your email address');
+      return;
+    }
+    
+    setLoadingPayment(true);
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email, 
+          amount: 15000, // 15,000 NGN or equivalent units for Pro
+          currency: 'NGN' 
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        alert('Payment initialization failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Payment Error:', error);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setLoadingPayment(false);
+    }
   };
 
   const updateTips = () => {
@@ -171,24 +234,32 @@ export default function TaxCalculator({
 
     } else if (country === 'UK') {
       // UK Logic (2025/26)
-      // Personal Allowance
+      // Personal Allowance: £12,570 (frozen until 2028)
+      // Tapered allowance: reduces by £1 for every £2 over £100,000
       const personalAllowance = profit > 100000 ? Math.max(0, 12570 - (profit - 100000) / 2) : 12570;
       taxableIncome = Math.max(0, profit - personalAllowance);
       
-      // Income Tax
+      // Income Tax Brackets (2025/26)
+      // Basic rate: 20% on income up to £37,700 (above allowance)
+      // Higher rate: 40% on income between £37,701 and £125,140
+      // Additional rate: 45% on income over £125,140
       const brackets = [
         { limit: 37700, rate: 0.20 }, { limit: 125140, rate: 0.40 }, { limit: Infinity, rate: 0.45 }
       ];
       nationalTax = calculateProgressiveTax(taxableIncome, brackets);
 
       // National Insurance (Class 4 - 2025/26)
-      // 6% on profits between £12,570 and £50,270, 2% above
+      // 6% on profits between £12,570 and £50,270
+      // 2% on profits over £50,270
       if (profit > 12570) {
         const niable = profit - 12570;
         const mainRate = Math.min(niable, 50270 - 12570) * 0.06;
         const upperRate = Math.max(0, profit - 50270) * 0.02;
         socialTax = mainRate + upperRate;
       }
+      
+      // Note: Class 2 NI is effectively abolished for most self-employed people from April 2024
+      // but still voluntary for some. We assume standard case here (abolished).
 
     } else if (country === 'CA') {
       // Canada Logic (2025/2026 Estimates)
@@ -511,11 +582,11 @@ export default function TaxCalculator({
                 
                 <div className="flex gap-3 mt-4">
                   <button 
-                    onClick={() => setShowProModal(true)}
+                    onClick={handleDownloadPDF}
                     className="flex-1 py-3 flex items-center justify-center gap-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all shadow-md group"
                   >
-                    <FileText className="w-4 h-4" />
-                    <span>Download PDF</span>
+                    {isPro ? <Download className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                    <span>{isPro ? 'Download PDF Report' : 'Unlock PDF Report'}</span>
                   </button>
                   <button 
                     onClick={handleShare}
@@ -565,28 +636,59 @@ export default function TaxCalculator({
                   </li>
                   <li className="flex items-center text-xs text-gray-600">
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
-                    Detailed Expense Categorization
+                    Detailed Expense Categorization & Deductions
                   </li>
                   <li className="flex items-center text-xs text-gray-600">
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
                     Official {currentCountry.code} Tax Forms Reference
                   </li>
+                  <li className="flex items-center text-xs text-gray-600">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
+                    Print-ready Professional PDF
+                  </li>
                 </ul>
               </div>
 
               <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-700 text-left">Join the waitlist for Pro access</label>
-                <div className="flex gap-2">
+                <label className="block text-sm font-medium text-gray-700 text-left">Unlock Pro Access</label>
+                <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg mb-2">
+                    <div className="flex justify-between items-center">
+                        <span className="text-sm text-blue-900 font-semibold">One-time Payment</span>
+                        <span className="text-lg text-blue-700 font-bold">₦15,000</span>
+                    </div>
+                    <p className="text-xs text-blue-600 mt-1">Lifetime access to Pro features & updates.</p>
+                </div>
+                
+                <div className="flex flex-col gap-2">
                   <input 
                     type="email" 
-                    placeholder="Enter your email" 
-                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email address" 
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                   />
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
-                    Notify Me
+                  <button 
+                    onClick={handlePayment}
+                    disabled={loadingPayment}
+                    className="w-full py-3 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                  >
+                    {loadingPayment ? (
+                        <>
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            Processing...
+                        </>
+                    ) : (
+                        <>
+                            <span>Pay & Unlock Instantly</span>
+                            <Lock className="w-3 h-3" />
+                        </>
+                    )}
                   </button>
                 </div>
-                <p className="text-xs text-gray-400 text-center">We'll let you know when PDF exports are ready.</p>
+                <p className="text-xs text-gray-400 text-center flex items-center justify-center gap-1">
+                    <Lock className="w-3 h-3" />
+                    Secured by Korapay
+                </p>
               </div>
             </div>
           </div>
@@ -695,8 +797,11 @@ export default function TaxCalculator({
             <p className="text-sm text-slate-300 mb-4">
                Get detailed quarterly tax breakdowns, PDF reports, and cloud save for your {currentCountry.name} business.
             </p>
-            <button className="w-full py-2 bg-white text-slate-900 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors">
-               Unlock Pro Features
+            <button 
+                onClick={() => !isPro && setShowProModal(true)}
+                className="w-full py-2 bg-white text-slate-900 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors"
+            >
+               {isPro ? 'Pro Active ✅' : 'Unlock Pro Features'}
             </button>
          </div>
       </div>
