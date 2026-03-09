@@ -5,11 +5,11 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Freelance Tax Calculator 2025 | HustleFinance",
+  title: "Freelance Tax Calculator 2025/2026 | HustleFinance",
   description: "Free self-employment tax calculator for freelancers, contractors, and gig workers. Estimate your 1099 taxes, quarterly payments, and take-home pay instantly.",
   keywords: ["freelance tax calculator", "1099 tax estimator", "self employment tax calculator", "gig worker taxes", "quarterly tax calculator"],
   openGraph: {
-    title: "Freelance Tax Calculator 2025 | HustleFinance",
+    title: "Freelance Tax Calculator 2025/2026 | HustleFinance",
     description: "Stop guessing your tax bill. Calculate your self-employment taxes instantly.",
     type: "website",
   },

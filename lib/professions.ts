@@ -23,7 +23,7 @@ export const professions: ProfessionData[] = [
       <p>As a rideshare driver, you are an independent contractor (1099-NEC), not an employee. This means no taxes are withheld from your payouts.</p>
       <h3>Common Deductions for Drivers</h3>
       <ul>
-        <li><strong>Standard Mileage Rate:</strong> In 2024, you can deduct 67 cents per business mile.</li>
+        <li><strong>Standard Mileage Rate:</strong> In 2025/2026, you can deduct the IRS standard rate per business mile.</li>
         <li><strong>Car Cleaning & Supplies:</strong> Car washes, detailing, and amenities for passengers (water, gum).</li>
         <li><strong>Phone Bill:</strong> The portion of your phone bill used for the Uber/Lyft app.</li>
         <li><strong>Platform Fees:</strong> The commission Uber/Lyft takes is a business expense.</li>
@@ -302,5 +302,78 @@ export const professions: ProfessionData[] = [
       other: 400 // Internet
     },
     keywords: ['virtual assistant tax calculator', 'va taxes', 'freelance admin tax', 'va deductions']
+  },
+  {
+    slug: 'airbnb-host',
+    title: 'Airbnb Host Tax Calculator',
+    description: 'Tax calculator for Airbnb and VRBO hosts. Estimate Schedule E or C taxes and find deductions for cleaning, supplies, and occupancy tax.',
+    content: `
+      <h2>Airbnb Host Tax Guide</h2>
+      <p>Short-term rental taxation depends on whether you provide "substantial services" (Schedule C) or just rent space (Schedule E).</p>
+      <h3>Host Deductions</h3>
+      <ul>
+        <li><strong>Cleaning Fees:</strong> Payments to cleaners are fully deductible.</li>
+        <li><strong>Supplies:</strong> Toiletries, linens, welcome baskets, and coffee.</li>
+        <li><strong>Platform Fees:</strong> Airbnb/VRBO service fees (usually 3%).</li>
+        <li><strong>Utilities:</strong> Electricity, water, internet (prorated if sharing your home).</li>
+        <li><strong>Repairs:</strong> Fixing leaks, painting, and maintenance (not improvements).</li>
+      </ul>
+    `,
+    defaultIncome: 35000,
+    defaultExpenses: {
+      software: 100, // Pricing tools
+      equipment: 2000, // Furniture
+      homeOffice: 0, 
+      other: 5000 // Cleaning, Utilities
+    },
+    keywords: ['airbnb tax calculator', 'vrbo host taxes', 'short term rental tax', 'airbnb deductions 2026']
+  },
+  {
+    slug: 'etsy-seller',
+    title: 'Etsy Seller Tax Calculator',
+    description: 'Income tax estimator for Etsy shop owners and handmade sellers. Track inventory costs, shipping, and platform fees.',
+    content: `
+      <h2>Etsy Seller Tax Guide</h2>
+      <p>Etsy sellers must track "Cost of Goods Sold" (COGS) separate from operating expenses.</p>
+      <h3>Etsy Write-offs</h3>
+      <ul>
+        <li><strong>Materials:</strong> Beads, fabric, wood, packaging materials (COGS).</li>
+        <li><strong>Shipping:</strong> Postage labels, bubble wrap, tape.</li>
+        <li><strong>Etsy Fees:</strong> Listing fees, transaction fees, and off-site ads.</li>
+        <li><strong>Home Studio:</strong> Space used exclusively for making/storing products.</li>
+      </ul>
+    `,
+    defaultIncome: 25000,
+    defaultExpenses: {
+      software: 200, // Canva, Marmalead
+      equipment: 500, // Printer, Tools
+      homeOffice: 800,
+      other: 6000 // Materials, Shipping
+    },
+    keywords: ['etsy tax calculator', 'handmade business tax', 'craft seller taxes', 'inventory deductions']
+  },
+  {
+    slug: 'fitness-influencer',
+    title: 'Fitness Influencer Tax Calculator',
+    description: 'Tax calculator for fitness influencers and content creators. Deduct gym memberships, filming gear, and supplements (if for review).',
+    content: `
+      <h2>Influencer Tax Guide</h2>
+      <p>Fitness influencers have unique deductions related to their brand and content production.</p>
+      <h3>Influencer Deductions</h3>
+      <ul>
+        <li><strong>Gym Memberships:</strong> Deductible if used for filming content (consult a pro).</li>
+        <li><strong>Production Gear:</strong> Cameras, tripods, lighting, editing software.</li>
+        <li><strong>Website/Domain:</strong> Hosting for your workout programs or merch store.</li>
+        <li><strong>Travel:</strong> Trips specifically for collabs or events (e.g., Arnold Expo).</li>
+      </ul>
+    `,
+    defaultIncome: 80000,
+    defaultExpenses: {
+      software: 600, // Editing apps
+      equipment: 2000, // Camera
+      homeOffice: 1000,
+      other: 2000 // Gym, Travel
+    },
+    keywords: ['fitness influencer tax calculator', 'content creator taxes', 'instagram influencer tax', 'youtuber deductions']
   }
 ];

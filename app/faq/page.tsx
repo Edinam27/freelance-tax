@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 export default function FAQPage() {
   const faqs = [
+    // --- General Freelance Tax Questions ---
     {
       question: "What is self-employment tax?",
       answer: "Self-employment tax consists of Social Security and Medicare taxes primarily for individuals who work for themselves. It is similar to the Social Security and Medicare taxes withheld from the pay of most wage earners. In the US, the rate is 15.3%."
@@ -28,10 +29,50 @@ export default function FAQPage() {
       question: "Do I need to pay quarterly taxes?",
       answer: "In most countries (US, Canada, Australia), if you expect to owe more than a certain amount (e.g., $1,000 in the US) when you file your return, you are required to make quarterly estimated tax payments to avoid penalties."
     },
+    
+    // --- Low Competition / Long-Tail Keywords (SEO Focus) ---
     {
-      question: "How does the Home Office Deduction work?",
-      answer: "If you use part of your home exclusively and regularly for conducting business, you may be able to deduct expenses for the business use of your home. The simplified method in the US allows a deduction of $5 per square foot, up to 300 square feet."
+      question: "How to calculate 1099 taxes for free?",
+      answer: "You can calculate your 1099 taxes for free using our calculator above. Simply enter your total 1099 income, subtract your business expenses, and our tool will estimate your Self-Employment Tax (15.3%) and Income Tax based on your bracket."
     },
+    {
+      question: "Freelance tax calculator for beginners - how does it work?",
+      answer: "For beginners, our calculator simplifies the process: 1) Select your country. 2) Enter your gross annual income. 3) Add expenses like software or equipment. We automatically calculate your 'Take Home Pay' after estimated taxes."
+    },
+    {
+      question: "What is the side hustle tax bracket for 2026?",
+      answer: "Side hustle income is taxed at your marginal tax rate, which depends on your total income (including your day job). For 2026, federal brackets range from 10% to 37%, plus the flat 15.3% self-employment tax on net profit."
+    },
+    {
+      question: "Do I have to pay taxes on DoorDash income under $600?",
+      answer: "Yes. Even if you don't receive a 1099-NEC form because you earned under $600, you are legally required to report all self-employment income to the IRS if your net earnings are $400 or more."
+    },
+    {
+      question: "Is there a self-employment tax calculator with no sign up?",
+      answer: "Yes, HustleFinance provides a completely free self-employment tax calculator with no sign-up required. You can estimate your taxes anonymously and instantly."
+    },
+    {
+      question: "When are quarterly tax payment dates for 2026?",
+      answer: "For the 2026 tax year, estimated tax payments are generally due on April 15, June 15, September 15, 2026, and January 15, 2027. Mark these dates to avoid underpayment penalties."
+    },
+    {
+      question: "What are common tax write-offs for Twitch streamers?",
+      answer: "Twitch streamers can deduct: 1) Hardware (PC, mic, camera), 2) Games purchased for streaming, 3) Branding (emotes, overlays), 4) Internet (business portion), and 5) Home office space used exclusively for streaming."
+    },
+    {
+      question: "Can I take the tax deduction for home office if renting?",
+      answer: "Yes! You do not need to own your home to claim the Home Office Deduction. Renters can deduct a portion of their rent and utilities based on the square footage of the space used exclusively for business."
+    },
+    {
+      question: "How much to set aside for taxes on 1099 income?",
+      answer: "To be safe, set aside 30% of your 1099 income. This covers the 15.3% Self-Employment Tax plus roughly 10-15% for Federal and State income taxes, depending on your bracket."
+    },
+    {
+      question: "Is there a freelance tax calculator excel alternative?",
+      answer: "Our web-based calculator is a superior alternative to Excel templates because it is updated with 2025/2026 tax rates automatically, works on mobile, and visualizes your data without complex formulas."
+    },
+
+    // --- Specific Scenarios & Countries ---
     {
       question: "What is the 'Trading Allowance' in the UK?",
       answer: "The Trading Allowance is a tax exemption of up to £1,000 a year for individuals with trading (self-employment) income. If your trading income is £1,000 or less, you do not need to declare it."
@@ -39,6 +80,62 @@ export default function FAQPage() {
     {
       question: "What is 'Kleinunternehmerregelung' in Germany?",
       answer: "The Small Business Regulation (Kleinunternehmerregelung) allows freelancers with revenue under €22,000 in the previous year and expected revenue under €50,000 in the current year to be exempt from charging VAT (Umsatzsteuer)."
+    },
+    {
+      question: "Do I need to register for GST in Australia?",
+      answer: "You generally need to register for GST in Australia if your business turnover (gross income) is $75,000 or more. Ride-sourcing drivers (Uber/DiDi) must register for GST regardless of turnover."
+    },
+    {
+      question: "What is the HST/GST threshold for Canadian freelancers?",
+      answer: "In Canada, you must register for a GST/HST account if you are not a 'small supplier,' meaning your worldwide taxable supplies exceed $30,000 in a single calendar quarter or over the last four consecutive quarters."
+    },
+    {
+      question: "Can I deduct health insurance premiums?",
+      answer: "In the US, self-employed individuals can often deduct 100% of their health insurance premiums for themselves and their dependents as an adjustment to income (above-the-line deduction)."
+    },
+    {
+      question: "What is the difference between a deduction and a credit?",
+      answer: "A deduction lowers your taxable income (e.g., deducting $1,000 expenses saves ~$300 in tax). A tax credit reduces your tax bill dollar-for-dollar (e.g., a $1,000 credit saves you $1,000)."
+    },
+    {
+      question: "How do I pay myself from my business?",
+      answer: "As a sole proprietor or single-member LLC, you pay yourself by taking an 'Owner's Draw'—simply transferring money from your business bank account to your personal account. You are taxed on the profit, not the draw."
+    },
+    {
+      question: "What is the QBI deduction?",
+      answer: "The Qualified Business Income (QBI) deduction allows eligible self-employed individuals and small business owners in the US to deduct up to 20% of their qualified business income from their taxes."
+    },
+    {
+      question: "Does this calculator handle state taxes?",
+      answer: "Yes, for US and Canadian users, you can input your specific State or Provincial tax rate to get a more accurate estimate of your total tax liability."
+    },
+    {
+      question: "What if I have a full-time job and freelance?",
+      answer: "Your freelance income is added to your W-2 job income. This often pushes your freelance profit into your highest marginal tax bracket. Our calculator focuses on the tax impact of your freelance income specifically."
+    },
+    {
+      question: "Are client lunches deductible?",
+      answer: "Generally, business meals with clients are 50% deductible in the US, provided the meal is not lavish or extravagant and business is discussed."
+    },
+    {
+      question: "What is the penalty for not paying estimated taxes?",
+      answer: "The IRS may charge an underpayment penalty if you don't pay enough tax throughout the year. The penalty is calculated based on the current interest rate and how much you underpaid."
+    },
+    {
+      question: "Can I deduct my car payments?",
+      answer: "You cannot deduct the car payment itself if you use the Standard Mileage Rate. If you use the Actual Expenses method, you can deduct the business portion of lease payments (but not the principal on a loan)."
+    },
+    {
+      question: "What is a 1099-NEC form?",
+      answer: "The 1099-NEC (Nonemployee Compensation) is the form clients use to report payments of $600 or more made to independent contractors. You use this to report your income."
+    },
+    {
+      question: "Do I need an LLC to freelance?",
+      answer: "No, you do not need an LLC to freelance. You can operate as a Sole Proprietor. However, an LLC provides liability protection (separating personal and business assets) but does not automatically save you taxes."
+    },
+    {
+      question: "Is this tax calculator updated for 2026?",
+      answer: "Yes, this tool uses the latest estimated tax brackets, standard deductions, and limits (like the Social Security wage base) projected for the 2025/2026 tax year."
     }
   ];
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X } from 'lucide-react';
+import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X, Share2, RotateCcw } from 'lucide-react';
 import clsx from 'clsx';
 
 const COLORS = ['#10B981', '#EF4444', '#3B82F6', '#F59E0B'];
@@ -71,11 +71,28 @@ export default function TaxCalculator({
 
   const [tips, setTips] = useState<TaxTip[]>([]);
   const [showProModal, setShowProModal] = useState(false);
+  const [showShareToast, setShowShareToast] = useState(false);
 
   useEffect(() => {
     calculateTaxes();
     updateTips();
   }, [income, softwareExpenses, equipmentExpenses, homeOfficeExpenses, otherExpenses, filingStatus, localTaxRate, country]);
+
+  const handleReset = () => {
+    setIncome(0);
+    setSoftwareExpenses(0);
+    setEquipmentExpenses(0);
+    setHomeOfficeExpenses(0);
+    setOtherExpenses(0);
+    setFilingStatus('single');
+    setLocalTaxRate(0);
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setShowShareToast(true);
+    setTimeout(() => setShowShareToast(false), 2000);
+  };
 
   const updateTips = () => {
     const profit = Math.max(0, income - totalExpenses);
@@ -131,23 +148,29 @@ export default function TaxCalculator({
     let taxableIncome = 0;
 
     if (country === 'US') {
-      // US Logic (Simplified 2024)
-      const seTax = profit * 0.9235 * 0.153;
-      const standardDeduction = filingStatus === 'single' ? 14600 : 29200;
+      // US Logic (Simplified 2025/2026)
+      // SE Tax: 12.4% SS (capped at $176,100 est) + 2.9% Medicare (uncapped)
+      const seIncome = profit * 0.9235;
+      const ssCap = 176100; // Estimated 2026 cap
+      const ssTax = Math.min(seIncome, ssCap) * 0.124;
+      const medicareTax = seIncome * 0.029;
+      const seTax = ssTax + medicareTax;
+
+      const standardDeduction = filingStatus === 'single' ? 15000 : 30000; // Estimated 2026
       const qbiDeduction = Math.max(0, (profit - seTax * 0.5) * 0.2);
       taxableIncome = Math.max(0, profit - (seTax * 0.5) - standardDeduction - qbiDeduction);
       
-      // US Brackets (Single)
+      // US Brackets (Single) - Estimated 2026 inflation adjustment
       const brackets = [
-        { limit: 11600, rate: 0.10 }, { limit: 47150, rate: 0.12 }, { limit: 100525, rate: 0.22 },
-        { limit: 191950, rate: 0.24 }, { limit: 243725, rate: 0.32 }, { limit: 609350, rate: 0.35 }, { limit: Infinity, rate: 0.37 }
+        { limit: 11925, rate: 0.10 }, { limit: 48475, rate: 0.12 }, { limit: 103350, rate: 0.22 },
+        { limit: 197300, rate: 0.24 }, { limit: 250525, rate: 0.32 }, { limit: 626350, rate: 0.35 }, { limit: Infinity, rate: 0.37 }
       ];
       nationalTax = calculateProgressiveTax(taxableIncome, brackets);
       socialTax = seTax;
       localTax = profit * (localTaxRate / 100);
 
     } else if (country === 'UK') {
-      // UK Logic (2024/25)
+      // UK Logic (2025/26)
       // Personal Allowance
       const personalAllowance = profit > 100000 ? Math.max(0, 12570 - (profit - 100000) / 2) : 12570;
       taxableIncome = Math.max(0, profit - personalAllowance);
@@ -158,7 +181,7 @@ export default function TaxCalculator({
       ];
       nationalTax = calculateProgressiveTax(taxableIncome, brackets);
 
-      // National Insurance (Class 4 - simplified)
+      // National Insurance (Class 4 - 2025/26)
       // 6% on profits between £12,570 and £50,270, 2% above
       if (profit > 12570) {
         const niable = profit - 12570;
@@ -168,29 +191,35 @@ export default function TaxCalculator({
       }
 
     } else if (country === 'CA') {
-      // Canada Logic (2024 Estimates)
-      const basicPersonalAmount = 15705;
+      // Canada Logic (2025/2026 Estimates)
+      const basicPersonalAmount = 16000; // Estimated adjustment
       taxableIncome = Math.max(0, profit - basicPersonalAmount);
       
       // Federal Tax
       const brackets = [
-        { limit: 55867, rate: 0.15 }, { limit: 111733, rate: 0.205 }, { limit: 173205, rate: 0.26 },
-        { limit: 246752, rate: 0.29 }, { limit: Infinity, rate: 0.33 }
+        { limit: 57375, rate: 0.15 }, { limit: 114750, rate: 0.205 }, { limit: 177882, rate: 0.26 },
+        { limit: 253414, rate: 0.29 }, { limit: Infinity, rate: 0.33 }
       ];
       nationalTax = calculateProgressiveTax(taxableIncome, brackets);
       
-      // CPP (Canada Pension Plan)
-      // 5.95% * 2 (Employer+Employee) on earnings between $3,500 and $68,500
+      // CPP (Canada Pension Plan 2025/26)
+      // Base: 5.95% * 2 on earnings between $3,500 and YMPE
       const cppExemption = 3500;
-      const cppMax = 68500;
-      const cppRate = 0.119; // 5.95% * 2
-      const pensionableEarnings = Math.min(Math.max(0, profit - cppExemption), cppMax - cppExemption);
-      socialTax = pensionableEarnings * cppRate;
+      const ympe = 71300; // Estimated 2026
+      const yampe = 76000; // Estimated 2026
+      
+      const baseEarnings = Math.min(Math.max(0, profit - cppExemption), ympe - cppExemption);
+      const baseCpp = baseEarnings * 0.119; // 11.9%
+      
+      const cpp2Earnings = Math.min(Math.max(0, profit - ympe), yampe - ympe);
+      const cpp2 = cpp2Earnings * 0.08; // 8%
+      
+      socialTax = baseCpp + cpp2;
 
       localTax = taxableIncome * (localTaxRate / 100); // Approximate provincial
 
     } else if (country === 'AU') {
-      // Australia Logic (2024-25)
+      // Australia Logic (2025-26)
       // Tax-free threshold $18,200
       const brackets = [
         { limit: 18200, rate: 0 }, { limit: 45000, rate: 0.16 }, { limit: 135000, rate: 0.30 },
@@ -215,9 +244,9 @@ export default function TaxCalculator({
        socialTax = profit * 0.02;
 
     } else if (country === 'DE') {
-      // Germany Logic (2024) - Highly simplified
-      // Basic allowance (Grundfreibetrag) €11,604
-      const basicAllowance = 11604;
+      // Germany Logic (2025/26) - Highly simplified
+      // Basic allowance (Grundfreibetrag) €12,096 (2025 proposal)
+      const basicAllowance = 12096;
       taxableIncome = Math.max(0, profit - basicAllowance);
       
       // Progressive Tax Curve (Simplified to brackets for estimation)
@@ -288,17 +317,26 @@ export default function TaxCalculator({
               </h2>
               <p className="mt-2 text-blue-100">Select your country and estimate your take-home pay.</p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 items-end">
                <label className="text-xs text-blue-200 font-semibold uppercase tracking-wider">Region</label>
-               <select 
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value as CountryCode)}
-                  className="bg-white/10 border border-white/20 text-white rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-white focus:outline-none cursor-pointer hover:bg-white/20 transition-colors"
-               >
-                 {COUNTRIES.map(c => (
-                   <option key={c.code} value={c.code} className="text-gray-900">{c.flag} {c.name}</option>
-                 ))}
-               </select>
+               <div className="flex gap-2">
+                 <button 
+                    onClick={handleReset}
+                    className="bg-white/10 hover:bg-white/20 text-white p-1.5 rounded-lg transition-colors"
+                    title="Reset Calculator"
+                 >
+                    <RotateCcw className="w-4 h-4" />
+                 </button>
+                 <select 
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value as CountryCode)}
+                    className="bg-white/10 border border-white/20 text-white rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-white focus:outline-none cursor-pointer hover:bg-white/20 transition-colors"
+                 >
+                   {COUNTRIES.map(c => (
+                     <option key={c.code} value={c.code} className="text-gray-900">{c.flag} {c.name}</option>
+                   ))}
+                 </select>
+               </div>
             </div>
           </div>
         </div>
@@ -471,13 +509,26 @@ export default function TaxCalculator({
                   <span className="font-bold text-2xl text-green-700">{currentCountry.currency}{results.netIncome.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                 </div>
                 
-                <button 
-                  onClick={() => setShowProModal(true)}
-                  className="w-full mt-4 py-3 flex items-center justify-center gap-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all shadow-md group"
-                >
-                  <FileText className="w-4 h-4" />
-                  <span>Download Tax Report (PDF)</span>
-                </button>
+                <div className="flex gap-3 mt-4">
+                  <button 
+                    onClick={() => setShowProModal(true)}
+                    className="flex-1 py-3 flex items-center justify-center gap-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all shadow-md group"
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span>Download PDF</span>
+                  </button>
+                  <button 
+                    onClick={handleShare}
+                    className="px-4 py-3 flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-all shadow-sm relative"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    {showShareToast && (
+                      <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded whitespace-nowrap animate-in fade-in slide-in-from-bottom-2">
+                        Link Copied!
+                      </span>
+                    )}
+                  </button>
+                </div>
              </div>
           </div>
         </div>
@@ -648,6 +699,10 @@ export default function TaxCalculator({
                Unlock Pro Features
             </button>
          </div>
+      </div>
+      
+      <div className="lg:col-span-3 text-center text-xs text-gray-400 mt-8 pb-8">
+        <p>Disclaimer: This tool provides estimates based on 2025/2026 tax rates. It does not constitute professional tax advice. Please consult a qualified accountant for your specific situation.</p>
       </div>
     </div>
   );

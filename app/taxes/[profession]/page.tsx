@@ -90,7 +90,7 @@ export default function ProfessionPage({ params }: Props) {
         <div className="mt-8 pt-8 border-t border-gray-100">
            <h3>Disclaimer</h3>
            <p className="text-sm text-gray-500 italic">
-             This calculator provides estimates based on 2024/2025 tax laws. Every tax situation is unique. Please consult with a qualified CPA or tax professional before making financial decisions.
+             This calculator provides estimates based on 2025/2026 tax laws. Every tax situation is unique. Please consult with a qualified CPA or tax professional before making financial decisions.
            </p>
         </div>
       </div>

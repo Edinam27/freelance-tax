@@ -3,7 +3,7 @@ import { ArrowRight, CheckCircle, ShieldCheck, Zap, Globe, TrendingUp } from 'lu
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Freelance Tax Calculator 2025 | USA, UK, Canada, Australia & Germany",
+  title: "Freelance Tax Calculator 2025/2026 | USA, UK, Canada, Australia & Germany",
   description: "Free self-employment tax calculator for freelancers worldwide. Estimate taxes for 1099, Sole Trader, T2125, ABN, and Kleinunternehmer income.",
   alternates: {
     canonical: 'https://freelance-tax.vercel.app',
@@ -43,7 +43,7 @@ export default function Home() {
               Freelance Taxes, <span className="text-blue-600">Simplified Globally.</span>
             </h1>
             <p className="text-xl text-gray-600 mb-10 leading-relaxed">
-              Stop guessing your tax bill. Use our free 2025 Self-Employment Tax Calculator to estimate your quarterly payments and maximize your take-home pay, wherever you work.
+              Stop guessing your tax bill. Use our free 2025/2026 Self-Employment Tax Calculator to estimate your quarterly payments and maximize your take-home pay, wherever you work.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg transition-all shadow-lg hover:shadow-xl">
