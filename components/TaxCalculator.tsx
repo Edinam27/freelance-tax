@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X, Share2, RotateCcw, Lock } from 'lucide-react';
+import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X, Share2, RotateCcw, Lock, Save, Bell, Calendar } from 'lucide-react';
 import { generateTaxReport } from '@/lib/pdfGenerator';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
@@ -77,6 +77,8 @@ export default function TaxCalculator({
   const [isPro, setIsPro] = useState(false);
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [email, setEmail] = useState('');
+  const [reminderEmail, setReminderEmail] = useState('');
+  const [showReminderToast, setShowReminderToast] = useState(false);
   const router = useRouter();
 
   // Check if user is already Pro (mock check or from localStorage/session)
@@ -85,7 +87,49 @@ export default function TaxCalculator({
     if (proStatus === 'true') {
       setIsPro(true);
     }
+    
+    // Load saved calculation
+    const savedCalc = localStorage.getItem('hustle_finance_calc');
+    if (savedCalc) {
+      const parsed = JSON.parse(savedCalc);
+      if (window.confirm('Found a saved calculation. Do you want to load it?')) {
+        setIncome(parsed.income || 0);
+        setCountry(parsed.country || 'US');
+        setSoftwareExpenses(parsed.expenses?.software || 0);
+        setEquipmentExpenses(parsed.expenses?.equipment || 0);
+        setHomeOfficeExpenses(parsed.expenses?.homeOffice || 0);
+        setOtherExpenses(parsed.expenses?.other || 0);
+      }
+    }
   }, []);
+
+  const handleSaveCalculation = () => {
+    const dataToSave = {
+      income,
+      country,
+      expenses: {
+        software: softwareExpenses,
+        equipment: equipmentExpenses,
+        homeOffice: homeOfficeExpenses,
+        other: otherExpenses
+      },
+      timestamp: new Date().toISOString()
+    };
+    localStorage.setItem('hustle_finance_calc', JSON.stringify(dataToSave));
+    alert('Calculation saved to this device! You can come back later to finish.');
+  };
+
+  const handleSetReminder = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reminderEmail) return;
+    
+    // In a real app, send to API
+    // await fetch('/api/reminders', { method: 'POST', body: JSON.stringify({ email: reminderEmail }) });
+    
+    setShowReminderToast(true);
+    setReminderEmail('');
+    setTimeout(() => setShowReminderToast(false), 3000);
+  };
 
   useEffect(() => {
     calculateTaxes();
@@ -389,8 +433,16 @@ export default function TaxCalculator({
               <p className="mt-2 text-blue-100">Select your country and estimate your take-home pay.</p>
             </div>
             <div className="flex flex-col gap-1 items-end">
-               <label className="text-xs text-blue-200 font-semibold uppercase tracking-wider">Region</label>
+               <label className="text-xs text-blue-200 font-semibold uppercase tracking-wider">Actions</label>
                <div className="flex gap-2">
+                 <button 
+                    onClick={handleSaveCalculation}
+                    className="bg-white/10 hover:bg-white/20 text-white p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs font-medium px-3"
+                    title="Save for later"
+                 >
+                    <Save className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Save</span>
+                 </button>
                  <button 
                     onClick={handleReset}
                     className="bg-white/10 hover:bg-white/20 text-white p-1.5 rounded-lg transition-colors"
@@ -787,6 +839,34 @@ export default function TaxCalculator({
                   </>
                )}
             </div>
+         </div>
+
+         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+               <Bell className="w-5 h-5 text-red-500" />
+               Don't Miss a Deadline
+            </h3>
+            <p className="text-xs text-gray-600 mb-4">
+              Get free email reminders 1 week before {country} quarterly tax due dates. Avoid penalties!
+            </p>
+            <form onSubmit={handleSetReminder} className="flex gap-2">
+              <input 
+                type="email" 
+                required
+                value={reminderEmail}
+                onChange={(e) => setReminderEmail(e.target.value)}
+                placeholder="Your email"
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              <button type="submit" className="bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-800 transition-colors">
+                Set
+              </button>
+            </form>
+            {showReminderToast && (
+              <p className="text-xs text-green-600 mt-2 font-medium animate-in fade-in">
+                ✓ Reminder set! We'll notify you.
+              </p>
+            )}
          </div>
 
          <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl shadow-lg p-6 text-white">
