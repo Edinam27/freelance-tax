@@ -136,6 +136,28 @@ export default function FAQPage() {
     {
       question: "Is this tax calculator updated for 2026?",
       answer: "Yes, this tool uses the latest estimated tax brackets, standard deductions, and limits (like the Social Security wage base) projected for the 2025/2026 tax year."
+    },
+
+    // --- Advanced / Strategic Questions (High Value Gaps) ---
+    {
+      question: "How do I calculate taxes if I have a W-2 job and 1099 income?",
+      answer: "Your freelance (1099) profit is added to your W-2 salary to determine your income tax bracket. However, the 15.3% Self-Employment Tax only applies to your freelance net profit. Our calculator specifically estimates the *additional* tax you owe on your side hustle income."
+    },
+    {
+      question: "I didn't receive a 1099-NEC. Do I still have to file taxes?",
+      answer: "Yes. The $600 threshold is for the *client* to send you a form. You are legally required to report *all* self-employment income to the IRS if your net earnings are $400 or more, regardless of whether you received a 1099 form."
+    },
+    {
+      question: "What is the penalty for missing a quarterly tax payment in 2025?",
+      answer: "The IRS typically charges an underpayment penalty (calculated as an annual interest rate, currently around 8%) on the amount you failed to pay on time. To avoid this, aim to pay at least 90% of your current year's tax or 100% of last year's tax."
+    },
+    {
+      question: "Do I pay taxes where I live or where my clients are?",
+      answer: "Generally, you pay income tax to the state (or country) where *you* physically perform the work (i.e., where you live), not where your clients are located. However, if you travel to a client's site in another state, you may owe 'non-resident' taxes there."
+    },
+    {
+      question: "Is an LLC better than a Sole Proprietorship for taxes?",
+      answer: "By default, a Single-Member LLC is taxed exactly the same as a Sole Proprietorship (disregarded entity). The tax benefit comes if you elect to be taxed as an 'S-Corp' once your profit exceeds ~$60,000, which can save you money on Self-Employment taxes."
     }
   ];
 
