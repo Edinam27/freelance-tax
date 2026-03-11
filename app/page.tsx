@@ -146,9 +146,12 @@ export default function Home() {
       <footer className="bg-white border-t border-gray-100 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} HustleFinance. All rights reserved.
+            © 2025 HustleFinance. All rights reserved.
           </div>
           <div className="flex gap-6">
+            <a href="/about" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+              About Us
+            </a>
             <a href="/faq" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               FAQ
             </a>
