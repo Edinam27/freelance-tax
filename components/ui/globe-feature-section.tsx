@@ -19,7 +19,7 @@ export default function GlobeFeatureSection() {
       <div className="flex flex-col-reverse items-center justify-between gap-10 md:flex-row">
         <div className="z-10 max-w-xl text-left">
           <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-4">
-            HustleFinance: <span className="text-blue-600">Global Tax Copilot</span>
+            SoloTax: <span className="text-blue-600">Global Tax Copilot</span>
           </h1>
           <p className="text-lg text-gray-600 mb-8 leading-relaxed">
             Stop guessing your tax bill. Calculate accurate 2025/2026 tax estimates for the US, UK, Canada, Australia, and Germany. 

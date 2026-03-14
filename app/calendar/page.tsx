@@ -44,9 +44,9 @@ export default function CalendarPage() {
     // Basic ICS format
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//HustleFinance//TaxCalendar//EN
+PRODID:-//SoloTax//TaxCalendar//EN
 BEGIN:VEVENT
-UID:${Date.now()}@hustlefinance.app
+UID:${Date.now()}@solotax.app
 DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DTSTART;VALUE=DATE:${date.replace(/-/g, '')}
 SUMMARY:${title}

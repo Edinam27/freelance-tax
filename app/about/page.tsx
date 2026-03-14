@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, Users, ShieldCheck, Globe } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "About Us | HustleFinance - Freelance Tax Experts",
-  description: "Learn about the team behind HustleFinance. Built by freelancers and tax professionals to simplify self-employment taxes for the gig economy.",
+  title: "About Us | SoloTax - Freelance Tax Experts",
+  description: "Learn about the team behind SoloTax. Built by freelancers and tax professionals to simplify self-employment taxes for the gig economy.",
   alternates: {
     canonical: 'https://freelance-tax.vercel.app/about',
   },
@@ -22,7 +22,7 @@ export default function AboutPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-8 md:p-12">
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-6">
-              About HustleFinance
+              About SoloTax
             </h1>
             <p className="text-xl text-gray-600 leading-relaxed mb-8">
               We are a team of freelancers, developers, and tax enthusiasts dedicated to demystifying the complex world of self-employment taxes.
@@ -55,7 +55,7 @@ export default function AboutPage() {
                 The gig economy is growing, but tax education hasn't kept up. Traditional tax software is expensive and often overkill for a simple side hustle. 
               </p>
               <p>
-                <strong>HustleFinance</strong> exists to fill that gap. We provide free, transparent, and privacy-focused tools to help you:
+                <strong>SoloTax</strong> exists to fill that gap. We provide free, transparent, and privacy-focused tools to help you:
               </p>
               <ul>
                 <li>Estimate your tax liability instantly without signing up.</li>
@@ -72,7 +72,7 @@ export default function AboutPage() {
           
           <div className="bg-gray-50 px-8 py-6 border-t border-gray-100">
             <p className="text-sm text-gray-500 text-center">
-              Note: While we strive for accuracy, HustleFinance is an educational tool. We are not a CPA firm. Please consult a qualified tax professional for advice specific to your financial situation.
+              Note: While we strive for accuracy, SoloTax is an educational tool. We are not a CPA firm. Please consult a qualified tax professional for advice specific to your financial situation.
             </p>
           </div>
         </div>

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | HustleFinance",
-  description: "Learn how HustleFinance protects your privacy. We calculate taxes locally in your browser and do not store personal financial data.",
+  title: "Privacy Policy | SoloTax",
+  description: "Learn how SoloTax protects your privacy. We calculate taxes locally in your browser and do not store personal financial data.",
   alternates: {
     canonical: 'https://freelance-tax.vercel.app/privacy',
   },
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
 
         <div className="prose prose-blue max-w-none text-gray-600">
           <p>
-            At HustleFinance ("we", "our", or "us"), we prioritize your privacy. This Privacy Policy explains how we handle your information when you use our website and tax calculator tools.
+            At SoloTax ("we", "our", or "us"), we prioritize your privacy. This Privacy Policy explains how we handle your information when you use our website and tax calculator tools.
           </p>
 
           <h3>1. Data Processing</h3>
@@ -63,7 +63,7 @@ export default function PrivacyPage() {
 
           <h3>6. Contact Us</h3>
           <p>
-            If you have any questions about this Privacy Policy, please contact us at support@hustlefinance.com.
+            If you have any questions about this Privacy Policy, please contact us at support@solotax.com.
           </p>
         </div>
       </div>

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     }
 
     const KORA_SECRET_KEY = process.env.KORA_SECRET_KEY;
-    const reference = `HUSTLE_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const reference = `SOLOTAX_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
     
     // Determine callback URL based on environment
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';

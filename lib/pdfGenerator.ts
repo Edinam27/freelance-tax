@@ -43,7 +43,7 @@ export const generateTaxReport = (
   
   doc.setFontSize(10);
   doc.text(`Generated on: ${today}`, 20, 35);
-  doc.text('HustleFinance', 160, 25);
+  doc.text('SoloTax', 160, 25);
 
   // --- Executive Summary ---
   doc.setTextColor(0, 0, 0);
@@ -157,5 +157,5 @@ export const generateTaxReport = (
     finalY + 5
   );
 
-  doc.save(`HustleFinance_TaxReport_${year.replace('/', '-')}.pdf`);
+  doc.save(`SoloTax_TaxReport_${year.replace('/', '-')}.pdf`);
 };

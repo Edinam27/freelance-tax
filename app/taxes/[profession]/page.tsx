@@ -25,11 +25,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${professionData.title} | HustleFinance`,
+    title: `${professionData.title} | SoloTax`,
     description: professionData.description,
     keywords: professionData.keywords,
     openGraph: {
-      title: `${professionData.title} | HustleFinance`,
+      title: `${professionData.title} | SoloTax`,
       description: professionData.description,
       type: 'website',
     },

@@ -19,7 +19,7 @@ export default function AustraliaTaxPage() {
     description: 'Everything you need to know about paying taxes as a sole trader in Australia, including Income Tax, GST, and Superannuation.',
     author: {
       '@type': 'Organization',
-      name: 'HustleFinance'
+      name: 'SoloTax'
     },
     datePublished: '2025-01-15',
     dateModified: '2025-03-13'

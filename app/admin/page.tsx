@@ -27,7 +27,7 @@ export default function AdminPage() {
 
       if (data.success) {
         // Unlock Pro features in client
-        localStorage.setItem('hustle_finance_pro', 'true');
+        localStorage.setItem('solo_tax_pro', 'true');
         alert('Admin Access Granted: Pro features unlocked.');
         router.push('/');
       } else {

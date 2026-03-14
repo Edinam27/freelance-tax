@@ -19,7 +19,7 @@ export default function GermanyTaxPage() {
     description: 'Everything you need to know about paying taxes as a freelancer in Germany, including Einkommensteuer, VAT, and Kleinunternehmer rules.',
     author: {
       '@type': 'Organization',
-      name: 'HustleFinance'
+      name: 'SoloTax'
     },
     datePublished: '2025-01-15',
     dateModified: '2025-03-13'

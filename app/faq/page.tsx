@@ -49,7 +49,7 @@ export default function FAQPage() {
     },
     {
       question: "Is there a self-employment tax calculator with no sign up?",
-      answer: "Yes, HustleFinance provides a completely free self-employment tax calculator with no sign-up required. You can estimate your taxes anonymously and instantly."
+      answer: "Yes, SoloTax provides a completely free self-employment tax calculator with no sign-up required. You can estimate your taxes anonymously and instantly."
     },
     {
       question: "When are quarterly tax payment dates for 2026?",

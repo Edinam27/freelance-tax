@@ -32,7 +32,7 @@ function CheckoutSuccessContent() {
       if (data.success) {
         setSuccess(true);
         // Persist Pro status (In a real app, update DB via API)
-        localStorage.setItem('hustle_finance_pro', 'true');
+        localStorage.setItem('solo_tax_pro', 'true');
       }
     } catch (error) {
       console.error('Verification failed', error);

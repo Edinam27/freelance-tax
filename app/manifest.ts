@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'HustleFinance Tax Calculator',
-    short_name: 'HustleFinance',
+    name: 'SoloTax Tax Calculator',
+    short_name: 'SoloTax',
     description: 'Free self-employment tax calculator for freelancers and gig workers.',
     start_url: '/',
     display: 'standalone',

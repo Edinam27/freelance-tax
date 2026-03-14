@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Terms of Service | HustleFinance",
-  description: "Terms and conditions for using the HustleFinance freelance tax calculator.",
+  title: "Terms of Service | SoloTax",
+  description: "Terms and conditions for using the SoloTax freelance tax calculator.",
   alternates: {
     canonical: 'https://freelance-tax.vercel.app/terms',
   },
@@ -29,7 +29,7 @@ export default function TermsPage() {
 
         <div className="prose prose-blue max-w-none text-gray-600">
           <p>
-            Please read these Terms of Service ("Terms") carefully before using the HustleFinance website (the "Service").
+            Please read these Terms of Service ("Terms") carefully before using the SoloTax website (the "Service").
           </p>
 
           <h3>1. Acceptance of Terms</h3>
@@ -39,7 +39,7 @@ export default function TermsPage() {
 
           <h3>2. Educational Purpose Only</h3>
           <p>
-            <strong>Disclaimer:</strong> HustleFinance is a tax estimation tool provided for educational and informational purposes only. The calculations provided are estimates based on general tax rules and do not constitute professional financial, tax, or legal advice.
+            <strong>Disclaimer:</strong> SoloTax is a tax estimation tool provided for educational and informational purposes only. The calculations provided are estimates based on general tax rules and do not constitute professional financial, tax, or legal advice.
           </p>
           <p>
             You should always consult with a qualified accountant, CPA, or tax professional regarding your specific financial situation before filing your taxes. We are not responsible for any errors, omissions, or financial losses resulting from the use of this calculator.
@@ -57,17 +57,17 @@ export default function TermsPage() {
 
           <h3>4. Affiliate Links</h3>
           <p>
-            Our Service may contain links to third-party websites or services that are not owned or controlled by HustleFinance. We may earn a commission from qualifying purchases made through these links (affiliate marketing). This does not affect the price you pay.
+            Our Service may contain links to third-party websites or services that are not owned or controlled by SoloTax. We may earn a commission from qualifying purchases made through these links (affiliate marketing). This does not affect the price you pay.
           </p>
 
           <h3>5. Intellectual Property</h3>
           <p>
-            The Service and its original content, features, and functionality are and will remain the exclusive property of HustleFinance and its licensors.
+            The Service and its original content, features, and functionality are and will remain the exclusive property of SoloTax and its licensors.
           </p>
 
           <h3>6. Limitation of Liability</h3>
           <p>
-            In no event shall HustleFinance, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
+            In no event shall SoloTax, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
           </p>
 
           <h3>7. Changes</h3>
@@ -77,7 +77,7 @@ export default function TermsPage() {
 
           <h3>8. Contact Us</h3>
           <p>
-            If you have any questions about these Terms, please contact us at support@hustlefinance.com.
+            If you have any questions about these Terms, please contact us at support@solotax.com.
           </p>
         </div>
       </div>

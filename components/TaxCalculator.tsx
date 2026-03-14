@@ -83,13 +83,13 @@ export default function TaxCalculator({
 
   // Check if user is already Pro (mock check or from localStorage/session)
   useEffect(() => {
-    const proStatus = localStorage.getItem('hustle_finance_pro');
+    const proStatus = localStorage.getItem('solo_tax_pro');
     if (proStatus === 'true') {
       setIsPro(true);
     }
     
     // Load saved calculation
-    const savedCalc = localStorage.getItem('hustle_finance_calc');
+    const savedCalc = localStorage.getItem('solo_tax_calc');
     if (savedCalc) {
       const parsed = JSON.parse(savedCalc);
       if (window.confirm('Found a saved calculation. Do you want to load it?')) {
@@ -115,7 +115,7 @@ export default function TaxCalculator({
       },
       timestamp: new Date().toISOString()
     };
-    localStorage.setItem('hustle_finance_calc', JSON.stringify(dataToSave));
+    localStorage.setItem('solo_tax_calc', JSON.stringify(dataToSave));
     alert('Calculation saved to this device! You can come back later to finish.');
   };
 
