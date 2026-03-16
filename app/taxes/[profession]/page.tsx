@@ -9,6 +9,8 @@ interface Props {
   params: { profession: string };
 }
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return professions.map((profession) => ({
     profession: profession.slug,
