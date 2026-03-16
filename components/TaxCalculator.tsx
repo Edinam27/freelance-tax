@@ -5,6 +5,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X, Share2, RotateCcw, Lock, Save, Bell, Calendar } from 'lucide-react';
 import { generateTaxReport } from '@/lib/pdfGenerator';
 import { useRouter } from 'next/navigation';
+import { usStateTaxRates, calculateStateTax } from '@/lib/stateTaxRates';
 import clsx from 'clsx';
 
 const COLORS = ['#10B981', '#EF4444', '#3B82F6', '#F59E0B'];
@@ -57,6 +58,7 @@ export default function TaxCalculator({
   const totalExpenses = softwareExpenses + equipmentExpenses + homeOfficeExpenses + otherExpenses;
   
   const [filingStatus, setFilingStatus] = useState<string>('single');
+  const [usState, setUsState] = useState<string>('TX'); // Default to Texas (no state tax)
   const [localTaxRate, setLocalTaxRate] = useState<number>(0); // State/Provincial tax rate
   
   const [results, setResults] = useState<TaxResult>({
@@ -274,7 +276,7 @@ export default function TaxCalculator({
       ];
       nationalTax = calculateProgressiveTax(taxableIncome, brackets);
       socialTax = seTax;
-      localTax = profit * (localTaxRate / 100);
+      localTax = calculateStateTax(profit, usState); // New State Tax Logic
 
     } else if (country === 'UK') {
       // UK Logic (2025/26)
@@ -544,23 +546,41 @@ export default function TaxCalculator({
             </div>
 
             {country === 'US' && (
-               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Filing Status</label>
-                <select
-                  value={filingStatus}
-                  onChange={(e) => setFilingStatus(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
-                >
-                  <option value="single">Single</option>
-                  <option value="married">Married Filing Jointly</option>
-                </select>
-              </div>
+               <div className="space-y-4">
+                 <div>
+                   <label className="block text-sm font-medium text-gray-700 mb-2">Filing Status</label>
+                   <select 
+                     value={filingStatus}
+                     onChange={(e) => setFilingStatus(e.target.value)}
+                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                   >
+                     <option value="single">Single</option>
+                     <option value="married">Married Filing Jointly</option>
+                     <option value="head">Head of Household</option>
+                   </select>
+                 </div>
+                 
+                 <div>
+                   <label className="block text-sm font-medium text-gray-700 mb-2">State (for Income Tax)</label>
+                   <select 
+                     value={usState}
+                     onChange={(e) => setUsState(e.target.value)}
+                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                   >
+                     {usStateTaxRates.map((state) => (
+                       <option key={state.abbreviation} value={state.abbreviation}>
+                         {state.name} ({state.abbreviation})
+                       </option>
+                     ))}
+                   </select>
+                 </div>
+               </div>
             )}
 
-            {(country === 'US' || country === 'CA') && (
+            {country === 'CA' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {country === 'US' ? 'State Tax Rate (%)' : 'Provincial Tax Rate (%)'}
+                  Provincial Tax Rate (%)
                 </label>
                 <div className="relative">
                   <input
