@@ -43,18 +43,18 @@ export default function ProfessionPage({ params }: Props) {
     notFound();
   }
 
-  // --- Dynamic FAQs for this Profession ---
-  const professionFaqs = [
+  // Use specific FAQs if available, otherwise fall back to generic ones (though all should have specific ones now)
+  const professionFaqs = professionData.faqs || [
     {
       question: `How much should a ${professionData.title.replace(' Tax Calculator', '')} set aside for taxes?`,
-      answer: `A general rule is to save 25-30% of your net income. This covers the 15.3% Self-Employment Tax plus federal and state income taxes. As a ${professionData.title.replace(' Tax Calculator', '')}, your income may fluctuate, so saving a percentage of every payment is safer than a fixed amount.`
+      answer: `A general rule is to save 25-30% of your net income. This covers the 15.3% Self-Employment Tax plus federal and state income taxes.`
     },
     {
       question: `What expenses can a ${professionData.title.replace(' Tax Calculator', '')} deduct?`,
       answer: `Common deductions include home office expenses, software subscriptions, equipment, and professional development. Specific to your field, you might deduct items listed in our guide above.`
     },
     {
-      question: `Do I need to pay quarterly taxes as a ${professionData.title.replace(' Tax Calculator', '')}?`,
+      question: `Do I need to pay quarterly taxes?`,
       answer: `Yes, if you expect to owe more than $1,000 in taxes when you file your return, the IRS requires you to make estimated quarterly payments to avoid penalties.`
     }
   ];
