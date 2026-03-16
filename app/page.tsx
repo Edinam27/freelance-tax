@@ -2,6 +2,7 @@ import TaxCalculator from '@/components/TaxCalculator';
 import GlobeFeatureSection from '@/components/ui/globe-feature-section';
 import { ArrowRight, CheckCircle, ShieldCheck, Zap, Globe, TrendingUp } from 'lucide-react';
 import type { Metadata } from 'next';
+import { professions } from '@/lib/professions';
 
 export const metadata: Metadata = {
   title: "Freelance Tax Calculator 2025/2026 | USA, UK, Canada, Australia & Germany",
@@ -87,18 +88,15 @@ export default function Home() {
             <p className="text-gray-600 mt-2">Tailored tax calculators for popular freelance careers</p>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="/taxes/uber-driver" className="px-6 py-3 bg-white border border-gray-200 rounded-full text-gray-700 font-medium hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors shadow-sm">
-              🚗 Uber/Lyft Driver
-            </a>
-            <a href="/taxes/graphic-designer" className="px-6 py-3 bg-white border border-gray-200 rounded-full text-gray-700 font-medium hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors shadow-sm">
-              🎨 Graphic Designer
-            </a>
-            <a href="/taxes/software-engineer" className="px-6 py-3 bg-white border border-gray-200 rounded-full text-gray-700 font-medium hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors shadow-sm">
-              💻 Software Engineer
-            </a>
-            <a href="/taxes/writer" className="px-6 py-3 bg-white border border-gray-200 rounded-full text-gray-700 font-medium hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors shadow-sm">
-              ✍️ Freelance Writer
-            </a>
+            {professions.map((prof) => (
+              <a 
+                key={prof.slug}
+                href={`/taxes/${prof.slug}`} 
+                className="px-6 py-3 bg-white border border-gray-200 rounded-full text-gray-700 font-medium hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors shadow-sm"
+              >
+                {prof.title.replace(' Tax Calculator', '')}
+              </a>
+            ))}
           </div>
         </div>
       </section>
@@ -132,14 +130,14 @@ export default function Home() {
             <h4 className="font-bold text-gray-900">🇨🇦 Canada</h4>
             <p className="text-sm mt-1">T2125 Form, CPP contributions, and GST/HST registration.</p>
           </div>
-          <div className="p-4 border border-gray-200 rounded-lg">
+          <a href="/taxes/australia" className="block p-4 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
             <h4 className="font-bold text-gray-900">🇦🇺 Australia</h4>
             <p className="text-sm mt-1">ABN, PAYG instalments, and Superannuation Guarantee.</p>
-          </div>
-          <div className="p-4 border border-gray-200 rounded-lg">
+          </a>
+          <a href="/taxes/germany" className="block p-4 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
             <h4 className="font-bold text-gray-900">🇩🇪 Germany</h4>
             <p className="text-sm mt-1">Einkommensteuer, VAT (Umsatzsteuer), and Kleinunternehmer rule.</p>
-          </div>
+          </a>
         </div>
       </section>
       {/* Footer Links */}
@@ -149,6 +147,9 @@ export default function Home() {
             © 2025 SoloTax. All rights reserved.
           </div>
           <div className="flex gap-6">
+            <a href="/calendar" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+              Tax Calendar
+            </a>
             <a href="/about" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               About Us
             </a>
