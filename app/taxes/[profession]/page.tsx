@@ -9,7 +9,7 @@ interface Props {
   params: { profession: string };
 }
 
-export const dynamicParams = true;
+export const dynamicParams = true; // Allow fallback to dynamic rendering
 
 export async function generateStaticParams() {
   return professions.map((profession) => ({
