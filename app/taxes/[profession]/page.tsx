@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, HelpCircle } from 'lucide-react';
 
 interface Props {
-  params: { profession: string };
+  params: Promise<{ profession: string }>;
 }
 
 export const dynamicParams = true; // Allow fallback to dynamic rendering
@@ -18,7 +18,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { profession } = params;
+  const { profession } = await params;
   const professionData = professions.find((p) => p.slug === profession);
 
   if (!professionData) {
@@ -39,8 +39,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function ProfessionPage({ params }: Props) {
-  const { profession } = params;
+export default async function ProfessionPage({ params }: Props) {
+  const { profession } = await params;
   const professionData = professions.find((p) => p.slug === profession);
 
   if (!professionData) {
