@@ -18,7 +18,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const professionData = professions.find((p) => p.slug === params.profession);
+  const { profession } = params;
+  const professionData = professions.find((p) => p.slug === profession);
 
   if (!professionData) {
     return {
@@ -39,7 +40,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function ProfessionPage({ params }: Props) {
-  const professionData = professions.find((p) => p.slug === params.profession);
+  const { profession } = params;
+  const professionData = professions.find((p) => p.slug === profession);
 
   if (!professionData) {
     notFound();
