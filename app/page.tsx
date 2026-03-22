@@ -138,6 +138,14 @@ export default function Home() {
             <h4 className="font-bold text-gray-900">🇩🇪 Germany</h4>
             <p className="text-sm mt-1">Einkommensteuer, VAT (Umsatzsteuer), and Kleinunternehmer rule.</p>
           </a>
+          <a href="/taxes/ireland" className="block p-4 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
+            <h4 className="font-bold text-gray-900">🇮🇪 Ireland</h4>
+            <p className="text-sm mt-1">Income Tax, PRSI Class S, and Universal Social Charge (USC).</p>
+          </a>
+          <a href="/taxes/romania" className="block p-4 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
+            <h4 className="font-bold text-gray-900">🇷🇴 Romania</h4>
+            <p className="text-sm mt-1">PFA 10% Flat Tax, CASS (Health), and CAS (Pension) thresholds.</p>
+          </a>
         </div>
       </section>
       {/* Footer Links */}

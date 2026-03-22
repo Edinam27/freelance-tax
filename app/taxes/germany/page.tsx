@@ -174,6 +174,30 @@ export default function GermanyTaxPage() {
                 <strong>USt-IdNr (VAT ID):</strong> Required for B2B transactions within the EU. You must apply for this separately if you do business outside Germany.
               </p>
             </div>
+            <div className="mt-12 pt-8 border-t border-gray-100">
+              <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 mb-6">
+                <HelpCircle className="w-6 h-6 text-blue-600" />
+                Germany Freelance Tax FAQs
+              </h2>
+              <div className="space-y-6 not-prose">
+                <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">What is the difference between Freiberufler and Gewerbe?</h3>
+                  <p className="text-gray-600">A 'Freiberufler' (liberal profession like writer, doctor, artist) is exempt from Trade Tax (Gewerbesteuer) and doesn't need to register with the commercial register. A 'Gewerbe' (trader, seller, agent) must register their business and pay Trade Tax if profits exceed €24,500.</p>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">How much is Einkommensteuer for freelancers?</h3>
+                  <p className="text-gray-600">Einkommensteuer (Income Tax) is progressive. For 2025/2026, the first €12,096 of profit is tax-free (Grundfreibetrag). After that, the rate starts at 14% and scales up to 42% for incomes over ~€66,760, capping at 45% for very high earners.</p>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Should I use the Kleinunternehmerregelung?</h3>
+                  <p className="text-gray-600">The Kleinunternehmerregelung (Small Business Rule) is great if your revenue is under €22,000 and you sell mainly to regular consumers (B2C), as it saves you from VAT paperwork. However, if you sell to other businesses (B2B) or have high startup expenses, registering for standard VAT is usually better so you can claim back VAT on your purchases.</p>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Do freelancers in Germany pay health insurance?</h3>
+                  <p className="text-gray-600">Yes. Unlike employees who split the cost with an employer, freelancers pay the full 100% of their health insurance (Krankenversicherung). Public insurance usually costs around 14-19% of your profit, while private insurance is based on age and health.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
