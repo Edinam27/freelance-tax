@@ -10,7 +10,7 @@ import clsx from 'clsx';
 
 const COLORS = ['#10B981', '#EF4444', '#3B82F6', '#F59E0B'];
 
-type CountryCode = 'US' | 'UK' | 'CA' | 'AU' | 'DE';
+type CountryCode = 'US' | 'UK' | 'CA' | 'AU' | 'DE' | 'IE' | 'RO';
 
 interface TaxResult {
   grossIncome: number;
@@ -36,6 +36,8 @@ const COUNTRIES: { code: CountryCode; name: string; currency: string; flag: stri
   { code: 'CA', name: 'Canada', currency: '$', flag: '🇨🇦' },
   { code: 'AU', name: 'Australia', currency: '$', flag: '🇦🇺' },
   { code: 'DE', name: 'Germany', currency: '€', flag: '🇩🇪' },
+  { code: 'IE', name: 'Ireland', currency: '€', flag: '🇮🇪' },
+  { code: 'RO', name: 'Romania', currency: 'RON', flag: '🇷🇴' },
 ];
 
 export default function TaxCalculator({ 
@@ -387,6 +389,54 @@ export default function TaxCalculator({
       // Health Insurance (approx 14-19% for self-employed)
       // Treated as "Social Tax" bucket here for visualization
       socialTax += Math.min(profit, 62100) * 0.16; 
+
+    } else if (country === 'IE') {
+      // Ireland Logic (2025/2026)
+      // Standard Rate: 20% up to €42,000 (Single)
+      // Higher Rate: 40% balance
+      const standardRateBand = 42000;
+      const personalTaxCredit = 1875;
+      const earnedIncomeCredit = 1875; // For self-employed it's the Earned Income Credit
+      
+      const taxAt20 = Math.min(profit, standardRateBand) * 0.20;
+      const taxAt40 = Math.max(0, profit - standardRateBand) * 0.40;
+      const grossTax = taxAt20 + taxAt40;
+      nationalTax = Math.max(0, grossTax - personalTaxCredit - earnedIncomeCredit);
+
+      // PRSI (Class S) - 4% on all income (min €500)
+      if (profit > 5000) {
+        socialTax += Math.max(500, profit * 0.04);
+      }
+
+      // USC (Universal Social Charge) - 2025 rates approx
+      if (profit > 13000) {
+        let usc = 0;
+        usc += Math.min(profit, 12012) * 0.005;
+        if (profit > 12012) usc += Math.min(profit - 12012, 13748) * 0.02;
+        if (profit > 25760) usc += Math.min(profit - 25760, 44284) * 0.04;
+        if (profit > 70044) usc += Math.max(0, profit - 70044) * 0.08;
+        // Self-employed surcharge over €100k
+        if (profit > 100000) usc += (profit - 100000) * 0.03;
+        socialTax += usc;
+      }
+      
+    } else if (country === 'RO') {
+      // Romania Logic (2025/2026) - PFA (Persoana Fizica Autorizata)
+      // Income Tax: 10% Flat
+      nationalTax = profit * 0.10;
+
+      // Social Contributions (CAS - Pension, CASS - Health)
+      // Based on Minimum Gross Wage (approx 3,700 RON/month for 2025 -> 44,400 RON/year)
+      const minWageYearly = 44400;
+      
+      // Health Insurance (CASS) - 10% on 6, 12, or 24 min wages
+      if (profit >= minWageYearly * 24) socialTax += (minWageYearly * 24) * 0.10;
+      else if (profit >= minWageYearly * 12) socialTax += (minWageYearly * 12) * 0.10;
+      else if (profit >= minWageYearly * 6) socialTax += (minWageYearly * 6) * 0.10;
+
+      // Pension (CAS) - 25% on 12 or 24 min wages
+      if (profit >= minWageYearly * 24) socialTax += (minWageYearly * 24) * 0.25;
+      else if (profit >= minWageYearly * 12) socialTax += (minWageYearly * 12) * 0.25;
     }
 
     const totalTax = nationalTax + socialTax + localTax;
