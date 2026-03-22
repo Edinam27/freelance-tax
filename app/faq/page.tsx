@@ -32,6 +32,10 @@ export default function FAQPage() {
     
     // --- Low Competition / Long-Tail Keywords (SEO Focus) ---
     {
+      question: "Is there a freelancer salary calculator?",
+      answer: "Yes, our tool doubles as a freelancer salary calculator. Enter your gross freelance revenue and deduct your business expenses and taxes to find your true 'take-home' salary."
+    },
+    {
       question: "How to calculate 1099 taxes for free?",
       answer: "You can calculate your 1099 taxes for free using our calculator above. Simply enter your total 1099 income, subtract your business expenses, and our tool will estimate your Self-Employment Tax (15.3%) and Income Tax based on your bracket."
     },
@@ -73,6 +77,14 @@ export default function FAQPage() {
     },
 
     // --- Specific Scenarios & Countries ---
+    {
+      question: "How do I calculate PFA taxes in Romania?",
+      answer: "For a PFA (Persoana Fizica Autorizata) in Romania, you calculate a flat 10% Income Tax on your net profit. Additionally, you must calculate CASS (Health Insurance - 10%) if your income exceeds 6 minimum wages, and CAS (Pension - 25%) if it exceeds 12 minimum wages."
+    },
+    {
+      question: "What is the USC for freelancers in Ireland?",
+      answer: "The Universal Social Charge (USC) is a tax payable on gross income over €13,000 in Ireland. The rates are progressive (0.5% to 8%). Self-employed individuals earning over €100,000 face an additional 3% USC surcharge."
+    },
     {
       question: "What is the 'Trading Allowance' in the UK?",
       answer: "The Trading Allowance is a tax exemption of up to £1,000 a year for individuals with trading (self-employment) income. If your trading income is £1,000 or less, you do not need to declare it."
