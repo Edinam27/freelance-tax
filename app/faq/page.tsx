@@ -8,6 +8,23 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://freelance-tax.vercel.app/faq',
   },
+  keywords: [
+    "freelancer salary calculator",
+    "1099 tax calculator free",
+    "doorDash 1099 expense categories",
+    "uber driver quarterly estimated tax",
+    "twitch streamer tax deductions tracker",
+    "youtube creator tax write offs checklist",
+    "etsy seller cogs tracker",
+    "onlyfans platform fee tax treatment",
+    "substack writer 1099 taxes",
+    "stripe paypal csv import taxes",
+    "ireland sole trader usc prsi calculator",
+    "calculator PFA CASS CAS",
+    "home office deduction method",
+    "mileage tracker for freelance taxes",
+    "creator tax checklist quarterly payments"
+  ],
 };
 
 export default function FAQPage() {
@@ -84,6 +101,42 @@ export default function FAQPage() {
     {
       question: "What is the USC for freelancers in Ireland?",
       answer: "The Universal Social Charge (USC) is a tax payable on gross income over €13,000 in Ireland. The rates are progressive (0.5% to 8%). Self-employed individuals earning over €100,000 face an additional 3% USC surcharge."
+    },
+    {
+      question: "How to import Stripe/PayPal CSVs for taxes?",
+      answer: "Export your transactions as CSV from Stripe or PayPal, then import them into our Write-off Tracker. Processor fees are auto-tagged and expenses are categorized to simplify your tax reporting."
+    },
+    {
+      question: "What are Etsy seller tax deductions and COGS?",
+      answer: "Etsy sellers can deduct materials, packaging, shipping, and fees. Use Cost of Goods Sold (COGS) to record inventory costs when items are sold rather than when materials are purchased."
+    },
+    {
+      question: "Can OnlyFans creators deduct platform fees?",
+      answer: "Yes. Platform fees and payment processing costs are deductible business expenses. Keep CSV exports from your processor as support."
+    },
+    {
+      question: "Best mileage tracker for freelance taxes?",
+      answer: "Use a mileage tracker app that logs business miles automatically. Only business miles are deductible; personal trips are not. Keep logs for IRS or local tax authority audits."
+    },
+    {
+      question: "How do quarterly estimated tax payments work?",
+      answer: "In the US, pay estimates on April 15, June 15, September 15, and January 15. In Ireland, pay Preliminary Tax via ROS by October 31. In Romania, file the Declaratia Unică by May 25 for final payments."
+    },
+    {
+      question: "Do YouTube creators need to report free products?",
+      answer: "If you receive products in exchange for content, the fair market value is generally taxable income. Track these values and any related expenses in your records."
+    },
+    {
+      question: "Are Substack writer payments reported on 1099?",
+      answer: "US-based writers receiving payments via platforms may receive 1099 forms; you must report all income regardless of receiving a form. Track expenses like software, hosting, and research materials."
+    },
+    {
+      question: "Can I deduct internet as a freelancer?",
+      answer: "Yes, deduct the business percentage of your internet bill. For example, if half of your usage is for work, deduct 50% of the bill."
+    },
+    {
+      question: "What is the best way to track creator write-offs?",
+      answer: "Use a category-based tracker that auto-suggests Software, Equipment, Home Office, and Other from descriptions. Import CSV statements and tag items quickly to keep records clean."
     },
     {
       question: "What is the 'Trading Allowance' in the UK?",
@@ -170,6 +223,47 @@ export default function FAQPage() {
     {
       question: "Is an LLC better than a Sole Proprietorship for taxes?",
       answer: "By default, a Single-Member LLC is taxed exactly the same as a Sole Proprietorship (disregarded entity). The tax benefit comes if you elect to be taxed as an 'S-Corp' once your profit exceeds ~$60,000, which can save you money on Self-Employment taxes."
+    }
+    ,
+    {
+      question: "Freelance writer 1099 expense tracker — what should I include?",
+      answer: "Track editing software, research materials, subscriptions, professional memberships, internet (business percentage), and home office costs. Keep receipts and export CSVs for clean records."
+    },
+    {
+      question: "Quarterly estimated tax calculator for creators — how do I use it?",
+      answer: "Enter annual income and expenses; the calculator computes your estimated total tax. Divide by four for US quarterly dates (Apr 15, Jun 15, Sep 15, Jan 15), shown in the Quarterly Plan card."
+    },
+    {
+      question: "DoorDash 1099 expense categories — what qualifies?",
+      answer: "Common categories include mileage (standard rate), phone service (business portion), insulated bags, parking/tolls, and platform fees. Keep a mileage log and categorize receipts."
+    },
+    {
+      question: "Uber driver quarterly estimated tax — how is it calculated?",
+      answer: "Use net profit (earnings minus expenses), apply Self-Employment tax (15.3%) plus income tax on your bracket, then divide the total by four for quarterly payments."
+    },
+    {
+      question: "YouTube studio home office deduction method — which approach should I use?",
+      answer: "Use the Simplified Method (rate per sq ft) or Actual Expenses method (percentage of rent, utilities, internet). The space must be used regularly and exclusively for production/editing."
+    },
+    {
+      question: "Twitch merch tax deductions and inventory tracking — how do I handle COGS?",
+      answer: "Record materials and manufacturing costs into inventory. When you sell merch, move the cost from inventory to COGS for accurate profit reporting."
+    },
+    {
+      question: "Stripe/PayPal CSVs — what columns matter for taxes?",
+      answer: "Description/Memo, Amount, Fees, and Date are key. Import CSVs into the Write-off Tracker, auto-tag processor fees as expenses, and categorize other items for deductions."
+    },
+    {
+      question: "Ireland sole trader USC and PRSI — can I estimate quickly?",
+      answer: "Yes, the Ireland page shows Income Tax plus PRSI and USC estimates based on bands and credits. Use it to preview expected liabilities as a sole trader."
+    },
+    {
+      question: "Romania PFA calculator (CASS/CAS) — how do thresholds apply?",
+      answer: "CASS (10%) applies at 6, 12, or 24 minimum wages; CAS (25%) applies at 12 or 24. The calculator estimates contributions from the current minimum wage baseline."
+    },
+    {
+      question: "Creator tax checklist for quarterly payments — what are the steps?",
+      answer: "1) Update income/expense records monthly. 2) Review net profit each quarter. 3) Use the calculator for estimated tax totals. 4) Pay by the listed due dates. 5) Keep CSV exports and receipts organized."
     }
   ];
 

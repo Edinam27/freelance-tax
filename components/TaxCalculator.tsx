@@ -2,11 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X, Share2, RotateCcw, Lock, Save, Bell, Calendar } from 'lucide-react';
+import { DollarSign, Calculator, HelpCircle, TrendingUp, Globe, Info, PiggyBank, FileText, Download, X, Share2, RotateCcw, Lock, Save, Bell, Calendar, ArrowRight } from 'lucide-react';
 import { generateTaxReport } from '@/lib/pdfGenerator';
+import { categorize, parseWriteOffCSV } from '@/lib/writeoffs';
 import { useRouter } from 'next/navigation';
 import { usStateTaxRates, calculateStateTax } from '@/lib/stateTaxRates';
 import clsx from 'clsx';
+import WriteOffTracker from '@/components/WriteOffTracker';
+import QuarterlyPlan from '@/components/QuarterlyPlan';
+import RecommendedTools from '@/components/RecommendedTools';
+import ReminderCard from '@/components/ReminderCard';
 
 const COLORS = ['#10B981', '#EF4444', '#3B82F6', '#F59E0B'];
 
@@ -57,11 +62,14 @@ export default function TaxCalculator({
   const [homeOfficeExpenses, setHomeOfficeExpenses] = useState<number>(initialExpenses.homeOffice);
   const [otherExpenses, setOtherExpenses] = useState<number>(initialExpenses.other);
   
-  const totalExpenses = softwareExpenses + equipmentExpenses + homeOfficeExpenses + otherExpenses;
+  const [writeOffs, setWriteOffs] = useState<{ id: string; description: string; amount: number; category: 'Software' | 'Equipment' | 'Home Office' | 'Other' }[]>([]);
+  const trackerTotal = writeOffs.reduce((s, w) => s + (Number(w.amount) || 0), 0);
+  const totalExpenses = softwareExpenses + equipmentExpenses + homeOfficeExpenses + otherExpenses + trackerTotal;
   
   const [filingStatus, setFilingStatus] = useState<string>('single');
   const [usState, setUsState] = useState<string>('TX'); // Default to Texas (no state tax)
   const [localTaxRate, setLocalTaxRate] = useState<number>(0); // State/Provincial tax rate
+  const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
   
   const [results, setResults] = useState<TaxResult>({
     grossIncome: 0,
@@ -78,7 +86,7 @@ export default function TaxCalculator({
   const [tips, setTips] = useState<TaxTip[]>([]);
   const [showProModal, setShowProModal] = useState(false);
   const [showShareToast, setShowShareToast] = useState(false);
-  const [isPro, setIsPro] = useState(false);
+  const [isPro, setIsPro] = useState(true);
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [email, setEmail] = useState('');
   const [reminderEmail, setReminderEmail] = useState('');
@@ -91,12 +99,8 @@ export default function TaxCalculator({
     setMounted(true);
   }, []);
 
-  // Check if user is already Pro (mock check or from localStorage/session)
   useEffect(() => {
-    const proStatus = localStorage.getItem('solo_tax_pro');
-    if (proStatus === 'true') {
-      setIsPro(true);
-    }
+    setIsPro(true);
     
     // Load saved calculation
     const savedCalc = localStorage.getItem('solo_tax_calc');
@@ -163,11 +167,6 @@ export default function TaxCalculator({
   };
 
   const handleDownloadPDF = () => {
-    if (!isPro) {
-      setShowProModal(true);
-      return;
-    }
-    
     generateTaxReport(
       currentCountry.name,
       currentCountry.currency,
@@ -468,7 +467,9 @@ export default function TaxCalculator({
     return tax;
   };
 
-  const currentCountry = COUNTRIES.find(c => c.code === country)!;
+  const currentCountry = COUNTRIES.find((c) => c.code === country) || COUNTRIES[0];
+  const guideHrefMap = { US: null, UK: null, CA: null, AU: '/taxes/australia', DE: '/taxes/germany', IE: '/taxes/ireland', RO: '/taxes/romania' };
+  const guideHref = guideHrefMap[country] || '/faq';
   
   const data = [
     { name: 'Net Income', value: results.netIncome },
@@ -488,7 +489,7 @@ export default function TaxCalculator({
                 <Calculator className="w-8 h-8" />
                 Tax Estimator
               </h2>
-              <p className="mt-2 text-blue-100">Select your country and estimate your take-home pay.</p>
+              <p className="mt-2 text-blue-100">Beginner-friendly calculator. Enter income, add optional expenses, see your take-home.</p>
             </div>
             <div className="flex flex-col gap-1 items-end">
                <label className="text-xs text-blue-200 font-semibold uppercase tracking-wider">Actions</label>
@@ -508,21 +509,50 @@ export default function TaxCalculator({
                  >
                     <RotateCcw className="w-4 h-4" />
                  </button>
-                 <select 
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value as CountryCode)}
-                    className="bg-white/10 border border-white/20 text-white rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-white focus:outline-none cursor-pointer hover:bg-white/20 transition-colors"
-                 >
-                   {COUNTRIES.map(c => (
-                     <option key={c.code} value={c.code} className="text-gray-900">{c.flag} {c.name}</option>
-                   ))}
-                 </select>
+                 
                </div>
             </div>
           </div>
         </div>
 
         <div className="p-8 space-y-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Mode</span>
+              <div className="flex rounded-full bg-gray-100 p-1">
+                <button
+                  onClick={() => setShowAdvanced(false)}
+                  className={clsx('px-3 py-1.5 rounded-full text-sm', !showAdvanced && 'bg-white shadow-sm')}
+                >
+                  Simple
+                </button>
+                <button
+                  onClick={() => setShowAdvanced(true)}
+                  className={clsx('px-3 py-1.5 rounded-full text-sm', showAdvanced && 'bg-white shadow-sm')}
+                >
+                  Advanced
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Country</label>
+            <div className="relative">
+              <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <select
+                value={country}
+                onChange={(e) => setCountry(e.target.value as CountryCode)}
+                className="w-full pl-10 pr-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-lg bg-white"
+              >
+                {COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.flag} {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           {/* Inputs */}
           <div className="grid md:grid-cols-2 gap-6">
             <div>
@@ -537,10 +567,16 @@ export default function TaxCalculator({
                   placeholder="0.00"
                 />
               </div>
+              <div className="flex gap-2 mt-2">
+                <button onClick={() => setIncome(25000)} className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-full">25k</button>
+                <button onClick={() => setIncome(50000)} className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-full">50k</button>
+                <button onClick={() => setIncome(100000)} className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-full">100k</button>
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Business Expenses</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Optional: Business Expenses</label>
+              <p className="text-xs text-gray-500 mb-2">Adding expenses reduces taxable profit.</p>
               <div className="grid grid-cols-2 gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
                 <div>
                    <label className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mb-1 block">Software</label>
@@ -601,7 +637,7 @@ export default function TaxCalculator({
               </div>
             </div>
 
-            {country === 'US' && (
+            {country === 'US' && showAdvanced && (
                <div className="space-y-4">
                  <div>
                    <label className="block text-sm font-medium text-gray-700 mb-2">Filing Status</label>
@@ -635,9 +671,7 @@ export default function TaxCalculator({
 
             {country === 'CA' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Provincial Tax Rate (%)
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Optional: Provincial Tax Rate (%)</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -650,6 +684,7 @@ export default function TaxCalculator({
                 </div>
               </div>
             )}
+            <WriteOffTracker currency={currentCountry.currency} writeOffs={writeOffs} setWriteOffs={setWriteOffs} />
           </div>
 
           {/* Results Visuals */}
@@ -687,7 +722,10 @@ export default function TaxCalculator({
              
              <div className="w-full md:w-1/2 space-y-4">
                 <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-gray-100 shadow-sm">
-                  <span className="text-gray-600 text-sm">Gross Profit</span>
+                  <div className="flex flex-col">
+                    <span className="text-gray-600 text-sm">Net Profit</span>
+                    <span className="text-xs text-gray-400">Income minus expenses</span>
+                  </div>
                   <span className="font-semibold text-gray-900">{currentCountry.currency}{(income - totalExpenses).toLocaleString()}</span>
                 </div>
                 
@@ -713,14 +751,20 @@ export default function TaxCalculator({
                   <span className="text-green-800 font-medium">Take Home Pay</span>
                   <span className="font-bold text-2xl text-green-700">{currentCountry.currency}{results.netIncome.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                 </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">Recommended Set Aside</span>
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                    {income > 0 ? `${Math.min(99, Math.max(0, ((results.totalTax / income) * 100))).toFixed(1)}%` : '—'}
+                  </span>
+                </div>
                 
                 <div className="flex gap-3 mt-4">
                   <button 
                     onClick={handleDownloadPDF}
                     className="flex-1 py-3 flex items-center justify-center gap-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all shadow-md group"
                   >
-                    {isPro ? <Download className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-                    <span>{isPro ? 'Download PDF Report' : 'Unlock PDF Report'}</span>
+                    <Download className="w-4 h-4" />
+                    <span>Download PDF Report</span>
                   </button>
                   <button 
                     onClick={handleShare}
@@ -733,101 +777,16 @@ export default function TaxCalculator({
                       </span>
                     )}
                   </button>
-                </div>
-             </div>
+            </div>
+              <div className="mt-6">
+                <QuarterlyPlan country={country} totalTax={results.totalTax} currency={currentCountry.currency} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Pro Modal */}
-      {showProModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative animate-in fade-in zoom-in duration-200">
-            <button 
-              onClick={() => setShowProModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FileText className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900">Get Your Professional Tax Report</h3>
-              <p className="text-gray-500 mt-2 text-sm px-4">
-                Download a detailed breakdown of your {currentCountry.name} taxes, expenses, and net income for loan applications or proof of income.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 text-left">
-                <h4 className="font-semibold text-gray-800 text-sm mb-2">Pro Report Includes:</h4>
-                <ul className="space-y-2">
-                  <li className="flex items-center text-xs text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
-                    Quarterly Estimated Tax Payment Schedule
-                  </li>
-                  <li className="flex items-center text-xs text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
-                    Detailed Expense Categorization & Deductions
-                  </li>
-                  <li className="flex items-center text-xs text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
-                    Official {currentCountry.code} Tax Forms Reference
-                  </li>
-                  <li className="flex items-center text-xs text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
-                    Print-ready Professional PDF
-                  </li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-700 text-left">Unlock Pro Access</label>
-                <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg mb-2">
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-blue-900 font-semibold">One-time Payment</span>
-                        <span className="text-lg text-blue-700 font-bold">₦15,000</span>
-                    </div>
-                    <p className="text-xs text-blue-600 mt-1">Lifetime access to Pro features & updates.</p>
-                </div>
-                
-                <div className="flex flex-col gap-2">
-                  <input 
-                    type="email" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address" 
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                  />
-                  <button 
-                    onClick={handlePayment}
-                    disabled={loadingPayment}
-                    className="w-full py-3 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
-                  >
-                    {loadingPayment ? (
-                        <>
-                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                            Processing...
-                        </>
-                    ) : (
-                        <>
-                            <span>Pay & Unlock Instantly</span>
-                            <Lock className="w-3 h-3" />
-                        </>
-                    )}
-                  </button>
-                </div>
-                <p className="text-xs text-gray-400 text-center flex items-center justify-center gap-1">
-                    <Lock className="w-3 h-3" />
-                    Secured by Korapay
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+     
 
       {/* Optimization Sidebar */}
       <div className="lg:col-span-1 space-y-6">
@@ -853,117 +812,29 @@ export default function TaxCalculator({
                  </div>
                ))}
             </div>
-            <button className="w-full mt-6 text-sm text-blue-600 font-medium hover:text-blue-700 flex items-center justify-center gap-1 group">
-               View Full {country} Tax Guide
-               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+            <a href={guideHref} className="w-full mt-6 text-sm text-blue-600 font-medium hover:text-blue-700 flex items-center justify-center gap-1 group">
+              View Full {country} Tax Guide
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </a>
          </div>
 
-         {/* Recommended Tools (Affiliate) */}
-         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-               <TrendingUp className="w-5 h-5 text-blue-500" />
-               Recommended Tools
-            </h3>
-            <div className="space-y-3">
-               {country === 'US' && (
-                  <>
-                    <a href="#" className="block p-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all group">
-                       <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-800 text-sm">TurboTax Self-Employed</span>
-                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Save $20</span>
-                       </div>
-                       <p className="text-xs text-gray-500 mt-1">Best for easy 1099 filing.</p>
-                    </a>
-                    <a href="#" className="block p-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all group">
-                       <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-800 text-sm">Novo Business Banking</span>
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Free</span>
-                       </div>
-                       <p className="text-xs text-gray-500 mt-1">No fees, perfect for freelancers.</p>
-                    </a>
-                  </>
-               )}
-               {country === 'UK' && (
-                  <>
-                    <a href="#" className="block p-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all group">
-                       <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-800 text-sm">Xero Accounting</span>
-                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">50% Off</span>
-                       </div>
-                       <p className="text-xs text-gray-500 mt-1">Automate your HMRC returns.</p>
-                    </a>
-                    <a href="#" className="block p-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all group">
-                       <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-800 text-sm">Starling Bank</span>
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Free</span>
-                       </div>
-                       <p className="text-xs text-gray-500 mt-1">#1 rated business bank in UK.</p>
-                    </a>
-                  </>
-               )}
-               {(country !== 'US' && country !== 'UK') && (
-                  <>
-                    <a href="#" className="block p-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all group">
-                       <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-800 text-sm">Wise Business</span>
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Low Fees</span>
-                       </div>
-                       <p className="text-xs text-gray-500 mt-1">Get paid in multiple currencies easily.</p>
-                    </a>
-                    <a href="#" className="block p-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all group">
-                       <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-800 text-sm">QuickBooks Online</span>
-                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">70% Off</span>
-                       </div>
-                       <p className="text-xs text-gray-500 mt-1">Track expenses and GST/VAT.</p>
-                    </a>
-                  </>
-               )}
-            </div>
-         </div>
+         <RecommendedTools country={country} />
 
-         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-               <Bell className="w-5 h-5 text-red-500" />
-               Don't Miss a Deadline
-            </h3>
-            <p className="text-xs text-gray-600 mb-4">
-              Get free email reminders 1 week before {country} quarterly tax due dates. Avoid penalties!
-            </p>
-            <form onSubmit={handleSetReminder} className="flex gap-2">
-              <input 
-                type="email" 
-                required
-                value={reminderEmail}
-                onChange={(e) => setReminderEmail(e.target.value)}
-                placeholder="Your email"
-                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-              />
-              <button type="submit" className="bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-800 transition-colors">
-                Set
-              </button>
-            </form>
-            {showReminderToast && (
-              <p className="text-xs text-green-600 mt-2 font-medium animate-in fade-in">
-                ✓ Reminder set! We'll notify you.
-              </p>
-            )}
-         </div>
+         <ReminderCard country={country} reminderEmail={reminderEmail} setReminderEmail={setReminderEmail} handleSetReminder={handleSetReminder} showReminderToast={showReminderToast} />
 
          <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl shadow-lg p-6 text-white">
             <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
                <Globe className="w-5 h-5" />
-               Go Pro
+               All Features Free
             </h3>
             <p className="text-sm text-slate-300 mb-4">
-               Get detailed quarterly tax breakdowns, PDF reports, and cloud save for your {currentCountry.name} business.
+               All features are available at no cost. Download reports and use all tools freely.
             </p>
             <button 
-                onClick={() => !isPro && setShowProModal(true)}
+                onClick={() => {}}
                 className="w-full py-2 bg-white text-slate-900 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors"
             >
-               {isPro ? 'Pro Active ✅' : 'Unlock Pro Features'}
+               All Features Active ✅
             </button>
          </div>
       </div>
@@ -973,24 +844,4 @@ export default function TaxCalculator({
       </div>
     </div>
   );
-}
-
-function ArrowRight(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
-    </svg>
-  )
 }
