@@ -4,7 +4,7 @@ import { ArrowLeft, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: "Terms of Service | SoloTax",
-  description: "Terms and conditions for using the SoloTax freelance tax calculator.",
+  description: "Read the terms and conditions for using the SoloTax freelance tax calculator, including educational purpose, limitations of liability, and acceptable use guidelines.",
   alternates: {
     canonical: 'https://freelance-tax.vercel.app/terms',
   },

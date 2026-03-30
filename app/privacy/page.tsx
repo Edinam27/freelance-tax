@@ -4,7 +4,7 @@ import { ArrowLeft, Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: "Privacy Policy | SoloTax",
-  description: "Learn how SoloTax protects your privacy. We calculate taxes locally in your browser and do not store personal financial data.",
+  description: "SoloTax safeguards your privacy with local, in‑browser tax calculations. We don’t store your income or expenses, and we use minimal analytics to improve the experience.",
   alternates: {
     canonical: 'https://freelance-tax.vercel.app/privacy',
   },
