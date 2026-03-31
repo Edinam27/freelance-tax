@@ -170,6 +170,9 @@ export default function Home() {
             <a href="/terms" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Terms of Service
             </a>
+            <a href="/blog" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+              Blog
+            </a>
           </div>
         </div>
       </footer>
